@@ -1,7 +1,3 @@
-from scipy.io import wavfile as wav
-import numpy as np
-import matplotlib.pyplot as plt
-
 class Letter:
     def __init__(self, char, start, end):
         self.char = char
@@ -32,18 +28,3 @@ letters = [
     Letter('O', 2.7931, 2.9450),
     Letter('R', 2.9450, 3.1292)
 ]
-
-if __name__ == "__main__":
-    (fs, y) = wav.read("../data/hh15.WAV")
-    t = np.arange(0, len(y) / fs, 1 / fs)
-    plt.plot(t, y)
-    plt.xlabel("Tiempo [s]")
-    plt.ylabel("Señal x")
-    for letter in letters:
-        offset = 0.015
-        x = (letter.start + letter.end) / 2 - offset
-        y = 20000
-        plt.text(x ,y, letter.char, fontsize=12)
-        plt.axvline(x=letter.start, color='r', linestyle='dashed')
-        plt.axvline(x=letter.end, color='r', linestyle='dashed')
-    plt.show()
