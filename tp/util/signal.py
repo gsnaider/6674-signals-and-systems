@@ -43,3 +43,24 @@ def plot_period(x, t, name):
     plt.ylabel('Señal')
     plt.plot(t, x)
     plt.show()
+
+
+def plot_specgram(x, fs, length_window, name):
+    plt.figure()
+    plt.subplot(2, 1, 1)
+    plt.suptitle('Señal y Espectrograma de %s' % name, fontsize=16)
+
+    t = np.arange(0, len(x) / fs, 1 / fs)
+    plt.plot(t, x)
+    plt.title("Señal")
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Señal")
+
+    plt.subplot(2, 1, 2)
+    plt.specgram(x, NFFT=length_window, Fs=fs, noverlap=length_window // 8)
+    plt.title("Espectrograma")
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Frecencia [Hz]")
+
+    plt.subplots_adjust(hspace=0.5)
+    plt.show()
