@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 class Letter:
     def __init__(self, char, start, end):
         self.char = char
@@ -28,3 +31,17 @@ letters = [
     Letter('O', 2.7931, 2.9450),
     Letter('R', 2.9450, 3.1292)
 ]
+
+## Algunos periodos especificos de letras en la señal
+
+# 'O' de 'Contagia'
+O_PERIOD_START = 0.61375
+O_PERIOD_END = 0.6185
+
+# Segunda 'A' de 'Contagia'
+A_PERIOD_START = 1.3065
+A_PERIOD_END = 1.31295
+
+# 'I' de 'Energía'
+I_PERIOD_START = 1.95068
+I_PERIOD_END = 1.95522
