@@ -51,6 +51,7 @@ def plot_specgram(x, fs, length_window, name):
     plt.suptitle('Señal y Espectrograma de %s' % name, fontsize=16)
 
     t = np.arange(0, len(x) / fs, 1 / fs)
+    plt.grid(linestyle='dashed')
     plt.plot(t, x)
     plt.title("Señal")
     plt.xlabel("Tiempo [s]")

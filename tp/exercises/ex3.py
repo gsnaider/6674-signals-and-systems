@@ -24,12 +24,36 @@ def fourier_and_rebuild(x, fs, letter, start, end, threshold=None):
     # Periodizamos la señal reconstruida y la guardamos como un audio
     x_periodic = np.squeeze(np.tile(x_rebuilt, [1, 500]))
 
+    print("Diferencia con original:\t", np.sum(x_sub - x_rebuilt))
+
     return x_rebuilt, x_periodic
 
 
 def exercise(x, fs, letter, period_start, period_end, threshold):
     x_period, x_periodic = fourier_and_rebuild(x, fs, letter, period_start, period_end)
     x2_period, x2_periodic = fourier_and_rebuild(x, fs, letter, period_start, period_end, threshold)
+
+    # Graficamos la señal reconstruida
+    plt.figure()
+    plt.grid(linestyle='dashed')
+    plt.title("Periodo de '%s' reconstruido" % letter)
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Señal")
+    t = np.arange(len(x_period)) / fs
+    plt.plot(t, x_period)
+    plt.show()
+
+    plt.figure()
+    plt.grid(linestyle='dashed')
+    plt.title("Señal de '%s' periodizada" % letter)
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Señal")
+    periods = 4
+    samples = len(x_period) * periods
+    t = np.arange(samples) / fs
+    plt.plot(t, x_periodic[:samples])
+    plt.show()
+
 
     # Graficamos las señales reconstruidas
     plt.figure()

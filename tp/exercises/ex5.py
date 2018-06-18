@@ -10,7 +10,7 @@ def exercise(x, fs, letter, T):
     plot_specgram(x_letter, fs, length_window, letter.char)
 
 if __name__ == "__main__":
-    (fs, x) = wav.read("../data/hh15.WAV")
+    (fs, x) = wav.read("../data/recorded.wav")
 
     letter_a = letters[7]
     T_a = A_PERIOD_END - A_PERIOD_START
@@ -23,3 +23,6 @@ if __name__ == "__main__":
     letter_i = letters[13]
     T_i = I_PERIOD_END - I_PERIOD_START
     exercise(x, fs, letter_i, T_i)
+
+    # Espectrograma de la señal completa
+    # plot_specgram(x, fs, int(T_a * fs * 10), '')
