@@ -11,6 +11,7 @@ if __name__ == "__main__":
 
     t_orig = np.arange(0, len(x_orig) / fs_orig, 1 / fs_orig)
     plt.plot(t_orig, x_orig)
+    plt.grid(linestyle='dashed')
     plt.title("Señal original")
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Señal")
@@ -18,6 +19,7 @@ if __name__ == "__main__":
     plt.subplot(2, 1, 2)
     t_rec = np.arange(0, len(x_rec) / fs_rec, 1 / fs_rec)
     plt.plot(t_rec, x_rec)
+    plt.grid(linestyle='dashed')
     plt.title("Señal grabada")
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Señal")
