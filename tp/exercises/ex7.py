@@ -61,7 +61,7 @@ def plot_H(params, Fs, letter):
 
 
 def exercise(params, letter):
-    poles, zeros = plot_H(A_PARAMS, FS, letter)
+    poles, zeros = plot_H(params, FS, letter)
     poles_zeros_plot(poles, zeros, "Modelo de tracto vocal '%s'\n\nPolos y ceros" % letter)
 
 if __name__ == "__main__":
