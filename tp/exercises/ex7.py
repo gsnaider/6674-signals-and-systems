@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 
 from util.plot import poles_zeros_plot
@@ -68,7 +67,7 @@ def exercise(params, letter):
 if __name__ == "__main__":
 
     exercise(A_PARAMS, 'A')
-    # exercise(E_PARAMS, 'E')
-    # exercise(I_PARAMS, 'I')
-    # exercise(O_PARAMS, 'O')
-    # exercise(U_PARAMS, 'U')
+    exercise(E_PARAMS, 'E')
+    exercise(I_PARAMS, 'I')
+    exercise(O_PARAMS, 'O')
+    exercise(U_PARAMS, 'U')
