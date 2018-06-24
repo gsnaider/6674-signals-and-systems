@@ -1,8 +1,7 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
-from util.signal import glottal_pulse
-
-import matplotlib.pyplot as plt
+from util.speech import glottal_pulse
 
 if __name__ == "__main__":
     fs = 16000
