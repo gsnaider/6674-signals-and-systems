@@ -4,15 +4,12 @@ from util.signal import cepstrum
 import matplotlib.pyplot as plt
 from util.speech import glottal_pulse, A_PARAMS, sintetize, U_PARAMS, E_PARAMS, I_PARAMS, O_PARAMS, vocal_tract_model
 
+FREQ_TRESHOLDS = {'A': 457, 'E': 400, 'I': 267, 'O': 320, 'U': 533}
 
-def cepstrum_analysis(fs, f0, sintetized, letter):
-    sample_periods = 10
-    period_len = fs // f0
-    samples = period_len * sample_periods
-    t_sample = np.arange(samples) / fs
-    sint_sample = sintetized[:samples]
+def cepstrum_analysis(fs, sintetized, letter):
+    t = np.arange(len(sintetized)) / fs
 
-    ceps = cepstrum(sint_sample)
+    ceps = cepstrum(sintetized)
 
     x_range_start = int(1 / 500 * fs)
     x_range_end = int(1 / 50 * fs)
@@ -23,14 +20,14 @@ def cepstrum_analysis(fs, f0, sintetized, letter):
     plt.figure()
     plt.subplot(2, 1, 1)
     plt.title("'%s' sintetizada" % letter)
-    plt.plot(t_sample, sint_sample)
+    plt.plot(t, sintetized)
     plt.grid(linestyle='dashed')
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Amplitud")
 
     plt.subplot(2, 1, 2)
     plt.title("Cepstrum de '%s'" % letter)
-    plt.plot(t_sample, np.real(ceps))
+    plt.plot(t, np.real(ceps))
     plt.grid(linestyle='dashed')
     plt.xlabel("Quefrencia [s]")
     plt.ylabel("Re{c[n]}")
@@ -51,62 +48,79 @@ def cepstrum_analysis(fs, f0, sintetized, letter):
     print("f0 = %f" % f0)
     print()
 
+    return ceps
 
-def estimate_freq_response(fs, f0, sintetized, vowel_params, letter):
-    ceps = cepstrum(sintetized)
-    freq_threshold = 500
 
+def estimate_freq_response(fs, ceps, vowel_params, letter):
+    freq_threshold = FREQ_TRESHOLDS[letter]
     quef_threshold = 1 / freq_threshold
     x_threshold = int(quef_threshold * fs)
-    ceps[x_threshold:] = 0
 
-    # t = np.arange(len(ceps)) / fs
-    # plt.figure()
-    # plt.plot(t, np.real(ceps))
-    # plt.title("Cepstrum truncado de '%s'" % letter)
-    # plt.grid(linestyle='dashed')
-    # plt.xlabel("Quefrencia [s]")
-    # plt.ylabel("Re{c[n]}")
-    # plt.show()
+    ceps_trunc = np.copy(ceps)
+    ceps_trunc[x_threshold:] = 0
+    t = np.arange(len(ceps)) / fs
 
-    H_estimated = np.exp(np.fft.fft(ceps))
-    H, w, Hs, poles, zeros = vocal_tract_model(vowel_params, fs)
+    plt.figure()
+    plt.title("Cepstrum de '%s'" % letter)
+    plt.grid(linestyle='dashed')
+    plt.plot(t, np.real(ceps))
+    plt.plot(t, np.real(ceps_trunc))
+    plt.axvline(x=t[x_threshold], color='red', linestyle='dashed')
+    plt.text(t[x_threshold], 1, "Umbral: %f" % t[x_threshold])
+    plt.legend(["Cepstrum", "Cepstrum truncado"])
+    plt.xlabel("Quefrencia [s]")
+    plt.ylabel("Re{c[n]}")
+    plt.show()
 
+
+    H_estimated = np.exp(np.real(np.fft.rfft(ceps_trunc)))
     H_estimated = np.abs(H_estimated)
-    H = np.abs(H)
 
-    # TODO aca normalizo para q coincidan, ver si hay otra forma
-    H_estimated = H_estimated / np.max(H_estimated)
-    H = H / np.max(H)
+    H, freqs, _, _, _ = vocal_tract_model(vowel_params, fs)
+    H = np.abs(H)
+    H = H[::int(len(H) / len(H_estimated))][:len(H_estimated)]
+    freqs = freqs[::int(len(freqs) / len(H_estimated))][:len(H_estimated)]
+
+    # TODO aca normalizo para que coincidan, ver si hay otra forma
+    H_estimated = H_estimated / max(H_estimated)
+    H = H / max(H)
 
     plt.figure()
     plt.title("Comparación de respuesta en frecuencia de '%s'" % letter)
-    plt.plot(w, H)
-    plt.plot(w, H_estimated[:len(w)])
-    plt.xlabel("ω")
+    plt.plot(freqs, H)
+    plt.plot(freqs, H_estimated)
+    plt.xlabel("Frecuencia[Hz]")
     plt.ylabel("|H(ω)|")
     plt.legend(["H", "H estimada"])
     plt.show()
 
 
-def exercise(glottal_pulse, fs, f0, vowel_params, letter):
+def exercise(glottal_pulse, fs, vowel_params, letter):
     sintetized = sintetize(glottal_pulse, fs, vowel_params)
-
-    # cepstrum_analysis(fs, f0, sintetized, letter)
-    estimate_freq_response(fs, f0, sintetized, vowel_params, letter)
+    ceps = cepstrum_analysis(fs, sintetized, letter)
+    estimate_freq_response(fs, ceps, vowel_params, letter)
 
 
 
 if __name__ == "__main__":
     fs = 16000
     f0 = 200
-    glot, _ = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=250, periods=200, fs=fs)
+    glot, t = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=1, periods=10, fs=fs)
 
-    exercise(glot, fs, f0, A_PARAMS, 'A')
-    exercise(glot, fs, f0, E_PARAMS, 'E')
-    exercise(glot, fs, f0, I_PARAMS, 'I')
-    exercise(glot, fs, f0, O_PARAMS, 'O')
-    exercise(glot, fs, f0, U_PARAMS, 'U')
+    glot = glot - np.mean(glot)
+    plt.figure()
+    plt.grid(linestyle='dashed')
+    plt.title("Pulso Glótico normalizado")
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Amplitud")
+    plt.plot(t, glot)
+    plt.show()
+
+    exercise(glot, fs, A_PARAMS, 'A')
+    exercise(glot, fs, E_PARAMS, 'E')
+    exercise(glot, fs, I_PARAMS, 'I')
+    exercise(glot, fs, O_PARAMS, 'O')
+    exercise(glot, fs, U_PARAMS, 'U')
 
 
 

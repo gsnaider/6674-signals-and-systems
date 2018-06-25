@@ -1,9 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.io import wavfile as wav
-from scipy.signal import lfilter
 
-from util.speech import glottal_pulse, vocal_tract_model, A_PARAMS, E_PARAMS, I_PARAMS, O_PARAMS, U_PARAMS, sintetize
+from util.speech import glottal_pulse, A_PARAMS, E_PARAMS, I_PARAMS, O_PARAMS, U_PARAMS, sintetize
 
 
 def plot_sintetized_vowel(sintetized, glottal_pulse, fs, f0, letter, sample_periods=10):

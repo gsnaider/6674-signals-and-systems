@@ -59,7 +59,8 @@ def vocal_tract_model(params, Fs):
     poles = np.array(poles).flatten()
     zeros = np.array(zeros).flatten()
 
-    return H, w, Hs, poles, zeros
+    freqs = np.arange(0,Fs/2,(Fs/2)/len(H))
+    return H, freqs, Hs, poles, zeros
 
 
 def glottal_pulse(f0, Tp_pct, Tn_pct, P0, periods, fs):

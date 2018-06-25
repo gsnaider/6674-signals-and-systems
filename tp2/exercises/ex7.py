@@ -1,3 +1,5 @@
+import numpy as np
+
 import matplotlib.pyplot as plt
 
 from util.plot import poles_zeros_plot
@@ -7,16 +9,16 @@ FS = 16000
 
 
 def plot_H(params, Fs, letter):
-    H, w, Hs, poles, zeros = vocal_tract_model(params, Fs)
+    H, freqs, Hs, poles, zeros = vocal_tract_model(params, Fs)
     plt.figure()
+
     for Hn in Hs:
-        plt.plot(w, abs(Hn), dashes=[6, 2])
-    plt.plot(w, abs(H))
+        plt.plot(freqs, abs(Hn), dashes=[6, 2])
+    plt.plot(freqs, abs(H))
     plt.grid(linestyle='dashed')
     plt.title("Modelo de tracto vocal '%s'\n\nRespuesta en frecuencia" % letter)
 
-    # TODO checkear como pasar de ω a Hz
-    plt.xlabel("ω")
+    plt.xlabel("Frecuencia[Hz]")
 
     plt.ylabel("|H(ω)|")
     plt.legend(["H1", "H2", "H3", "H4", "H"])
