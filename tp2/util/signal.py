@@ -66,3 +66,6 @@ def plot_specgram(x, fs, length_window, name):
 
     plt.subplots_adjust(hspace=0.5)
     plt.show()
+
+def cepstrum(x):
+    return np.fft.ifft(np.log(np.abs(np.fft.fft(x))))
