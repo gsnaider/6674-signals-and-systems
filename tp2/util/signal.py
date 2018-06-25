@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from scipy.signal import find_peaks_cwt
 
 def sub_signal(x, fs, start, end):
     sub_x = x[int(start * fs): int(end * fs)]
@@ -69,3 +69,20 @@ def plot_specgram(x, fs, length_window, name):
 
 def cepstrum(x):
     return np.fft.ifft(np.log(np.abs(np.fft.fft(x))))
+
+
+def PSOLA(x, fs, sonorous_segments, f0s, new_f0_pct, plot=False):
+
+    for sonorous_segment in sonorous_segments:
+        x_start = int(sonorous_segment[0] * fs)
+        x_end = int(sonorous_segment[1] * fs)
+        x_segment = x[x_start:x_end]
+        peaks_idxs = find_peaks_cwt(x_segment, np.arange(1, 100))
+
+        if (plot):
+            t = np.arange(0, len(x) / fs, 1 / fs)[x_start:x_end]
+            plt.figure()
+            plt.plot(t, x_segment)
+            for peak_idx in peaks_idxs:
+                plt.axvline(x=t[peak_idx], color='r', linestyle='dotted')
+            plt.show()

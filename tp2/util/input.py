@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import numpy as np
 
 import matplotlib.pyplot as plt
+
+from util.speech import fundamental_freq
+
 
 class Letter:
     def __init__(self, char, start, end):
         self.char = char
         self.start = start
         self.end = end
+
 
 letters = [
     Letter('C', 0.5544, 0.5786),
@@ -48,8 +53,9 @@ A_PERIOD_END = 1.31295
 I_PERIOD_START = 1.95068
 I_PERIOD_END = 1.95522
 
+
 def setup_input_signal_plot(t, x):
-    plt.plot(t,x)
+    plt.plot(t, x)
     plt.grid(linestyle='dashed')
     plt.title("Señal de voz")
     plt.xlabel("Tiempo [s]")
@@ -61,3 +67,52 @@ def setup_input_signal_plot(t, x):
         plt.text(letter_x, letter_y, letter.char, fontsize=12)
         plt.axvline(x=letter.start, color='r', linestyle='dotted')
         plt.axvline(x=letter.end, color='r', linestyle='dotted')
+
+
+def fundamental_freqs(x, fs):
+    t = np.arange(0, len(x) / fs, 1 / fs)
+
+    window_time = 0.05
+    window_size = int(window_time * fs)
+    n_segments = len(x) // window_size
+
+    segments = np.array_split(x, n_segments)
+    f0s = []
+    for segment in segments:
+        if np.max(np.abs(segment)) > 200:
+            f0s.append(fundamental_freq(segment, fs))
+        else:
+            f0s.append(0)
+
+    f0s = np.array(f0s)
+    f0s = np.repeat(f0s, window_size)
+
+    # Padding al final de f0s para que coincida con len(t)
+    f0s = np.pad(f0s, (0, len(t) - len(f0s)), 'edge')
+
+    return f0s
+
+
+# Devuelve segmentos sonoros como tuplas (tiempo_inicio, tiempo_final).
+# A estos segmentos se les puede aplicar PSOLA
+def sonorous_segments():
+    sonorous_letters_idx = [1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 17, 18, 19, 20, 21]
+    sonorous_segs = []
+    for idx in sonorous_letters_idx:
+        letter = letters[idx]
+        sonorous_segs.append((letter.start, letter.end))
+
+    # Ajustamos algunos valores para que matcheen con el segmento sonoro
+    sonorous_segs[0] = (sonorous_segs[0][0], 0.66238)
+    sonorous_segs[1] = (sonorous_segs[1][0], 0.852721)
+    sonorous_segs[2] = (sonorous_segs[2][0], 1.031)
+    sonorous_segs[3] = (1.21245, sonorous_segs[3][1])
+    sonorous_segs[8] = (1.68072, 1.74757)
+    sonorous_segs[11] = (sonorous_segs[11][0], 2.2716)
+    sonorous_segs[12] = (sonorous_segs[12][0], 2.53758)
+    sonorous_segs[14] = (sonorous_segs[14][0], 2.77924)
+
+    sonorous_segs[13] = (2.6092, sonorous_segs[13][1])
+    sonorous_segs[16] = (2.9786, 3.09908)
+
+    return sonorous_segs
