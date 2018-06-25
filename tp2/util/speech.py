@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.signal import lfilter
 
+from util.signal import cepstrum
+
 A_PARAMS = [
     (830, 110),
     (1400, 160),
@@ -88,3 +90,17 @@ def sintetize(glottal_pulse, fs, vowel_params):
 
     sintetized = lfilter([1], den_coefs, glottal_pulse)
     return sintetized
+
+
+def fundamental_freq(x, fs):
+    ceps = cepstrum(x)
+
+    x_range_start = int(1 / 500 * fs)
+    x_range_end = int(1 / 50 * fs)
+
+    max_x = np.argmax(np.real(ceps[x_range_start: x_range_end]))
+
+    max_t = (x_range_start + max_x) / fs
+    f0 = 1 / max_t
+
+    return f0

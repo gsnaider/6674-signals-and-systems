@@ -1,0 +1,44 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.io import wavfile as wav
+
+from util.speech import fundamental_freq
+
+if __name__ == "__main__":
+    (fs, x) = wav.read("../data/hh15.WAV")
+    t = np.arange(0, len(x) / fs, 1 / fs)
+
+    window_time = 0.05
+    window_size = int(window_time * fs)
+    print("Tamaño de ventana de tiempo: %fs" % (window_time))
+
+    n_segments = len(x) // window_size
+
+    segments = np.array_split(x, n_segments)
+    f0s = []
+    for segment in segments:
+        f0s.append(fundamental_freq(segment, fs))
+
+    f0s = np.array(f0s)
+
+    f0s = np.repeat(f0s, window_size)
+    f0s = np.pad(f0s, (0, len(t) - len(f0s)), 'constant', constant_values=(0, 0))
+
+
+    plt.figure()
+    plt.subplot(2,1,1)
+    plt.plot(t,x)
+    plt.grid(linestyle='dashed')
+    plt.title("Señal de voz")
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Señal x")
+
+
+    plt.subplot(2, 1, 2)
+    plt.plot(t, f0s)
+    plt.grid(linestyle='dashed')
+    plt.title("Frequencia fundamental")
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Frequencia [Hz]")
+
+    plt.show()
