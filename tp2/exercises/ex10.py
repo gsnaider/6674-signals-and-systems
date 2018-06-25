@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.io import wavfile as wav
 
-from util.input import letters
+from util.input import letters, setup_input_signal_plot
 from util.speech import fundamental_freq
 
 if __name__ == "__main__":
@@ -32,19 +32,7 @@ if __name__ == "__main__":
 
     plt.figure()
     plt.subplot(2,1,1)
-    plt.plot(t,x)
-    plt.grid(linestyle='dashed')
-    plt.title("Señal de voz")
-    plt.xlabel("Tiempo [s]")
-    plt.ylabel("Señal x")
-    for letter in letters:
-        offset = 0.015
-        letter_x = (letter.start + letter.end) / 2 - offset
-        letter_y = 20000
-        plt.text(letter_x, letter_y, letter.char, fontsize=12)
-        plt.axvline(x=letter.start, color='r', linestyle='dotted')
-        plt.axvline(x=letter.end, color='r', linestyle='dotted')
-
+    setup_input_signal_plot(t, x)
 
     plt.subplot(2, 1, 2)
     plt.plot(t, f0s)
