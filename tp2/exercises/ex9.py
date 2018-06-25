@@ -2,19 +2,17 @@ import numpy as np
 
 from util.signal import cepstrum
 import matplotlib.pyplot as plt
-from util.speech import glottal_pulse, A_PARAMS, sintetize, U_PARAMS, E_PARAMS, I_PARAMS, O_PARAMS
+from util.speech import glottal_pulse, A_PARAMS, sintetize, U_PARAMS, E_PARAMS, I_PARAMS, O_PARAMS, vocal_tract_model
 
 
-def exercise(glottal_pulse, fs, f0, vowel_params, letter):
-    a_sintetized = sintetize(glottal_pulse, fs, vowel_params)
-
+def cepstrum_analysis(fs, f0, sintetized, letter):
     sample_periods = 10
     period_len = fs // f0
     samples = period_len * sample_periods
     t_sample = np.arange(samples) / fs
-    a_sint_sample = a_sintetized[:samples]
+    sint_sample = sintetized[:samples]
 
-    ceps = cepstrum(a_sint_sample)
+    ceps = cepstrum(sint_sample)
 
     x_range_start = int(1 / 500 * fs)
     x_range_end = int(1 / 50 * fs)
@@ -25,7 +23,7 @@ def exercise(glottal_pulse, fs, f0, vowel_params, letter):
     plt.figure()
     plt.subplot(2, 1, 1)
     plt.title("'%s' sintetizada" % letter)
-    plt.plot(t_sample, a_sint_sample)
+    plt.plot(t_sample, sint_sample)
     plt.grid(linestyle='dashed')
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Amplitud")
@@ -53,6 +51,49 @@ def exercise(glottal_pulse, fs, f0, vowel_params, letter):
     print("f0 = %f" % f0)
     print()
 
+
+def estimate_freq_response(fs, f0, sintetized, vowel_params, letter):
+    ceps = cepstrum(sintetized)
+    freq_threshold = 500
+
+    quef_threshold = 1 / freq_threshold
+    x_threshold = int(quef_threshold * fs)
+    ceps[x_threshold:] = 0
+
+    # t = np.arange(len(ceps)) / fs
+    # plt.figure()
+    # plt.plot(t, np.real(ceps))
+    # plt.title("Cepstrum truncado de '%s'" % letter)
+    # plt.grid(linestyle='dashed')
+    # plt.xlabel("Quefrencia [s]")
+    # plt.ylabel("Re{c[n]}")
+    # plt.show()
+
+    H_estimated = np.exp(np.fft.fft(ceps))
+    H, w, Hs, poles, zeros = vocal_tract_model(vowel_params, fs)
+
+    H_estimated = np.abs(H_estimated)
+    H = np.abs(H)
+
+    # TODO aca normalizo para q coincidan, ver si hay otra forma
+    H_estimated = H_estimated / np.max(H_estimated)
+    H = H / np.max(H)
+
+    plt.figure()
+    plt.title("Comparación de respuesta en frecuencia de '%s'" % letter)
+    plt.plot(w, H)
+    plt.plot(w, H_estimated[:len(w)])
+    plt.xlabel("ω")
+    plt.ylabel("|H(ω)|")
+    plt.legend(["H", "H estimada"])
+    plt.show()
+
+
+def exercise(glottal_pulse, fs, f0, vowel_params, letter):
+    sintetized = sintetize(glottal_pulse, fs, vowel_params)
+
+    # cepstrum_analysis(fs, f0, sintetized, letter)
+    estimate_freq_response(fs, f0, sintetized, vowel_params, letter)
 
 
 
