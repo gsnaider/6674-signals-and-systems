@@ -42,7 +42,7 @@ def exercise(x, fs, sonorous_segs, f0s, new_t_pct, plot=False):
     new_fs = int(fs / new_t_pct)
 
     plot_new_x(x, fs, f0s, new_x, new_fs, new_t_pct)
-    filename = "../data/hh15_t_%d.wav" % (new_t_pct * 100)
+    filename = "../data/ex12/hh15_t_%d.wav" % (new_t_pct * 100)
     wav.write(filename, new_fs, new_x)
 
 if __name__ == "__main__":

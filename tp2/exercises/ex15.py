@@ -104,7 +104,7 @@ def exercise(glottal_pulse, fs, f0, vowel_params, letter):
     x_start = len(filtered) - len(sintetized)
     filtered = filtered[x_start:]
 
-    wav.write("../data/%s_filt.wav" % letter, fs, filtered)
+    wav.write("../data/ex15/%s_filt.wav" % letter, fs, filtered)
 
     plt.figure()
     plt.title("Señales de audio de '%s'" % letter)
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     f0 = 200
     glot, _ = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=1, periods=200, fs=fs)
 
-    # exercise(glot, fs, f0, A_PARAMS, 'A')
+    exercise(glot, fs, f0, A_PARAMS, 'A')
     exercise(glot, fs, f0, E_PARAMS, 'E')
     exercise(glot, fs, f0, I_PARAMS, 'I')
     exercise(glot, fs, f0, O_PARAMS, 'O')

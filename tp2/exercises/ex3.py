@@ -90,5 +90,5 @@ if __name__ == "__main__":
     (fs, x) = wav.read("../data/hh15.WAV")
 
     exercise(x, fs, 'A', A_PERIOD_START, A_PERIOD_END, threshold=50)
-    exercise(x, fs, 'O', O_PERIOD_START, O_PERIOD_END, threshold=250)
-    exercise(x, fs, 'I', I_PERIOD_START, I_PERIOD_END, threshold=200)
+    # exercise(x, fs, 'O', O_PERIOD_START, O_PERIOD_END, threshold=250)
+    # exercise(x, fs, 'I', I_PERIOD_START, I_PERIOD_END, threshold=200)

@@ -108,7 +108,7 @@ if __name__ == "__main__":
     f0 = 200
     glot, t = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=1, periods=10, fs=fs)
 
-    # exercise(glot, fs, A_PARAMS, 'A')
+    exercise(glot, fs, A_PARAMS, 'A')
     exercise(glot, fs, E_PARAMS, 'E')
     exercise(glot, fs, I_PARAMS, 'I')
     exercise(glot, fs, O_PARAMS, 'O')

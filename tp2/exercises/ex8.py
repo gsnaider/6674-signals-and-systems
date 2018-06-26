@@ -58,17 +58,17 @@ def exercise(glottal_pulse, fs, f0, vowel_params, letter):
     sintetized = sintetize(glottal_pulse, fs, vowel_params)
     plot_sintetized_vowel(sintetized, glottal_pulse, fs, f0, letter)
     spectral_analysis(sintetized, fs, f0, letter)
-    wav.write("../data/ex8/%s_sint2.wav" % letter, fs, sintetized)
+    wav.write("../data/ex8/%s_sint.wav" % letter, fs, sintetized)
 
 if __name__ == "__main__":
     fs = 16000
     f0 = 200
     glot, _ = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=1, periods=200, fs=fs)
 
-    exercise(glot, fs, f0, A_PARAMS, 'A')
-    # exercise(glot, fs, f0, E_PARAMS, 'E')
-    # exercise(glot, fs, f0, I_PARAMS, 'I')
-    # exercise(glot, fs, f0, O_PARAMS, 'O')
-    # exercise(glot, fs, f0, U_PARAMS, 'U')
+    # exercise(glot, fs, f0, A_PARAMS, 'A')
+    exercise(glot, fs, f0, E_PARAMS, 'E')
+    exercise(glot, fs, f0, I_PARAMS, 'I')
+    exercise(glot, fs, f0, O_PARAMS, 'O')
+    exercise(glot, fs, f0, U_PARAMS, 'U')
 
 
