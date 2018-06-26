@@ -96,7 +96,7 @@ def fundamental_freqs(x, fs):
 # Devuelve segmentos sonoros como tuplas (tiempo_inicio, tiempo_final).
 # A estos segmentos se les puede aplicar PSOLA
 def sonorous_segments():
-    sonorous_letters_idx = [1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 17, 18, 19, 20, 21]
+    sonorous_letters_idx = [1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 14, 17, 18, 19, 20, 21]
     sonorous_segs = []
     for idx in sonorous_letters_idx:
         letter = letters[idx]
@@ -108,11 +108,10 @@ def sonorous_segments():
     sonorous_segs[2] = (sonorous_segs[2][0], 1.031)
     sonorous_segs[3] = (1.21245, sonorous_segs[3][1])
     sonorous_segs[8] = (1.68072, 1.74757)
-    sonorous_segs[11] = (sonorous_segs[11][0], 2.2716)
-    sonorous_segs[12] = (sonorous_segs[12][0], 2.53758)
-    sonorous_segs[14] = (sonorous_segs[14][0], 2.77924)
+    sonorous_segs[11] = (sonorous_segs[11][0], 2.53758)
+    sonorous_segs[13] = (sonorous_segs[13][0], 2.77924)
 
-    sonorous_segs[13] = (2.6092, sonorous_segs[13][1])
-    sonorous_segs[16] = (2.9786, 3.09908)
+    sonorous_segs[12] = (2.6092, sonorous_segs[12][1])
+    sonorous_segs[15] = (2.9786, 3.09908)
 
     return sonorous_segs
