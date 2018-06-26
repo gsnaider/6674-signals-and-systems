@@ -81,35 +81,20 @@ def PSOLA(x, fs, sonorous_segments, f0s, new_f0_pct, plot=False):
         x_segment = x[x_start:x_end]
         peaks_idxs = find_peaks_cwt(x_segment, np.arange(1, 100))
 
-        diffs = []
-        prev = None
-        for peak in peaks_idxs:
-            if (prev != None):
-                diffs.append(peak - prev)
-            prev = peak
-        mean_diff = np.mean(np.array(diffs))
+        f0 = f0s[(x_start + x_end) // 2]
+        period_diff = fs / f0
+        new_f0 = f0 * new_f0_pct
+        new_period_diff = int(fs / new_f0)
 
-        # f0_diff = fs / f0s[(x_start + x_end) // 2]
-        # print("(x_start, x_end) = (%f, %f)" % (sonorous_segment[0], sonorous_segment[1]))
-        # print("MEAN DIFF: %f" % mean_diff)
-        # print("F0 DIFF: %f" % f0_diff)
-        # print()
-        # mean_diff = f0_diff
 
         # Tomamos aproximadamente 2 periodos como ancho de ventana
-        window_size = int(mean_diff * 2)
+        window_size = int(period_diff * 2)
 
         windows = []
         for peak_idx in peaks_idxs[1:-1]:
             window = np.hanning(window_size)
             win_start = peak_idx - window_size // 2
             win_end = win_start + len(window)
-
-            # if(win_start < 0):
-            #     window = window[-win_start:]
-            #     win_start = 0
-            # if (win_end > len(x_segment)):
-            #     window = window[:]
 
             full_window = np.zeros(len(x_segment))
             full_window[win_start:win_end] = window
@@ -126,34 +111,33 @@ def PSOLA(x, fs, sonorous_segments, f0s, new_f0_pct, plot=False):
         periods_with_zeros = []
         for window in windows:
             period = x_segment * window
-            # segmented_x += period
             periods_with_zeros.append(period)
 
         periods = []
         for period_w_z in periods_with_zeros:
             period = np.trim_zeros(period_w_z)
             periods.append(period)
-            # plt.figure()
-            # plt.plot(period_w_z)
-            # plt.plot(period)
-            # plt.show()
-            # plot = False
 
         result = segmented_x
         current_pos = start_idx
-        for period in periods:
-            new_period_with_zeros = np.zeros(len(x_segment))
-            new_period_with_zeros[current_pos:current_pos+len(period)] = period
-            result += new_period_with_zeros
-            current_pos += int(mean_diff * new_f0_pct)
+        period_idx = 0
+        while ((current_pos + new_period_diff) < end_idx):
+            if (period_idx < len(periods)):
+                period = periods[period_idx]
+            else:
+                period = last_period
 
-        last_period = periods[-1]
-        # Mientras haya espacio, copiamos el ultimo
-        while ((current_pos + len(last_period)) < end_idx):
             new_period_with_zeros = np.zeros(len(x_segment))
-            new_period_with_zeros[current_pos:current_pos + len(period)] = periods[-1]
+
+            period_end_pos = min(current_pos+len(period), end_idx)
+            new_period_with_zeros[current_pos:period_end_pos] = period[:(period_end_pos - current_pos)]
+
             result += new_period_with_zeros
-            current_pos += int(mean_diff * new_f0_pct)
+
+            current_pos += new_period_diff
+            period_idx += 1
+            last_period = period
+
 
         new_x[x_start:x_end] = result
 
@@ -179,7 +163,7 @@ def PSOLA(x, fs, sonorous_segments, f0s, new_f0_pct, plot=False):
             plt.grid(linestyle="dashed")
             plt.plot(t, x_segment)
             plt.plot(t, result)
-            plt.legend(["Señal original", "Señal modificada"])
+            plt.legend(["Señal original", "Señal con f0 en %d%%" % (new_f0_pct * 100)])
             plt.show()
             plot = False # Only plot first segment
 
