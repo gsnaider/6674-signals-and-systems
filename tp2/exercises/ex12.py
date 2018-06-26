@@ -7,8 +7,8 @@ from util.signal import PSOLA
 
 def plot_new_x(x, fs, f0s, new_x, new_fs, new_t_pct):
     t = np.arange(0, len(x) / fs, 1 / fs)
-    new_t = np.arange(0, len(new_x) / new_fs, 1 / new_fs)[:-1]
-    new_f0s = fundamental_freqs(new_x, new_fs)[:-1]
+    new_t = np.arange(0, len(new_x) / new_fs, 1 / new_fs)
+    new_f0s = fundamental_freqs(new_x, new_fs)
 
     plt.figure()
     plt.subplot(2, 1, 1)
@@ -52,10 +52,12 @@ if __name__ == "__main__":
 
     sonorous_segs = sonorous_segments()
 
-    # exercise(x, fs, sonorous_segs, f0s, 0.9)
-    # exercise(x, fs, sonorous_segs, f0s, 0.8)
-    # exercise(x, fs, sonorous_segs, f0s, 0.7)
-    # exercise(x, fs, sonorous_segs, f0s, 1.1)
-    # exercise(x, fs, sonorous_segs, f0s, 1.2)
-    exercise(x, fs, sonorous_segs, f0s, 1.3)
+    exercise(x, fs, sonorous_segs, f0s, 0.9)
+    exercise(x, fs, sonorous_segs, f0s, 0.8)
+    exercise(x, fs, sonorous_segs, f0s, 0.7)
+    exercise(x, fs, sonorous_segs, f0s, 1.1)
+    exercise(x, fs, sonorous_segs, f0s, 1.2)
+
+    # To run with 1.3, add a [:-1] in new_t and new_f0s in plot_new_x function
+    # exercise(x, fs, sonorous_segs, f0s, 1.3)
 
