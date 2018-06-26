@@ -81,8 +81,8 @@ FILTER_COEFS = [
 ]
 
 def spectral_analysis(sintetized, filtered, fs, f0, letter):
-    X = np.fft.rfft(sintetized) / len(sintetized)
-    X_fil = np.fft.rfft(filtered) / len(filtered)
+    X = np.fft.fft(sintetized) / len(sintetized)
+    X_fil = np.fft.fft(filtered) / len(filtered)
 
     freqs = np.arange(0, fs, fs / len(X))
 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     f0 = 200
     glot, _ = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=1, periods=200, fs=fs)
 
-    exercise(glot, fs, f0, A_PARAMS, 'A')
+    # exercise(glot, fs, f0, A_PARAMS, 'A')
     exercise(glot, fs, f0, E_PARAMS, 'E')
     exercise(glot, fs, f0, I_PARAMS, 'I')
     exercise(glot, fs, f0, O_PARAMS, 'O')

@@ -79,7 +79,10 @@ def glottal_pulse(f0, Tp_pct, Tn_pct, P0, periods, fs):
     x[:Tp_idx] = P0 / 2 * (1 - np.cos(t[:Tp_idx] / Tp * np.pi))
     x[Tp_idx:Tp_idx + Tn_idx] = P0 * np.cos((t[Tp_idx:Tp_idx + Tn_idx] - Tp) / Tn * np.pi / 2)
 
-    return np.squeeze(np.tile(x, [1, periods])), t
+    glot = np.squeeze(np.tile(x, [1, periods]))
+    glot = glot - np.mean(glot)
+
+    return glot, t
 
 
 
