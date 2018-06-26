@@ -12,7 +12,7 @@ def cepstrum_analysis(fs, sintetized, letter):
     ceps = cepstrum(sintetized)
 
     x_range_start = int(1 / 500 * fs)
-    x_range_end = int(1 / 50 * fs)
+    x_range_end = int(1 / 150 * fs)
 
     max_x = np.argmax(np.real(ceps[x_range_start: x_range_end]))
     max_cep = np.max(np.real(ceps[x_range_start: x_range_end]))
@@ -31,13 +31,13 @@ def cepstrum_analysis(fs, sintetized, letter):
     plt.grid(linestyle='dashed')
     plt.xlabel("Quefrencia [s]")
     plt.ylabel("Re{c[n]}")
-    plt.axvline(x=1 / 50, color='r', linestyle='dotted')
+    plt.axvline(x=1 / 150, color='r', linestyle='dotted')
     plt.axvline(x=1 / 500, color='r', linestyle='dotted')
 
     max_t = (x_range_start + max_x) / fs
     f0 = 1 / max_t
-    max_text = "max(c[n]) = %f\nQuefrencia = %f\nf0 = %f" % (max_cep, max_t, f0)
-    plt.text(max_t, max_cep + 0.05, max_text, fontsize=10)
+    max_text = "max(c[n]) = %f\nQuefrencia = %fs\nf0 = %fHz" % (max_cep, max_t, f0)
+    plt.text(max_t + 0.0001, max_cep + 0.05, max_text, fontsize=10)
     plt.axvline(x=max_t, color='b', linestyle='dotted')
 
     plt.show()
@@ -116,11 +116,11 @@ if __name__ == "__main__":
     plt.plot(t, glot)
     plt.show()
 
-    exercise(glot, fs, A_PARAMS, 'A')
+    # exercise(glot, fs, A_PARAMS, 'A')
     exercise(glot, fs, E_PARAMS, 'E')
-    exercise(glot, fs, I_PARAMS, 'I')
-    exercise(glot, fs, O_PARAMS, 'O')
-    exercise(glot, fs, U_PARAMS, 'U')
+    # exercise(glot, fs, I_PARAMS, 'I')
+    # exercise(glot, fs, O_PARAMS, 'O')
+    # exercise(glot, fs, U_PARAMS, 'U')
 
 
 

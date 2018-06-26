@@ -34,8 +34,9 @@ def spectral_analysis(sintetized, fs, f0, letter):
     period_freqs = np.arange(0, fs / 2, (fs / 2) / len(X_period))
 
     plt.figure()
+    plt.suptitle("Análisis en frecuencia de '%s' sintetizada" % letter)
     plt.subplot(2, 1, 1)
-    plt.suptitle("Espectro de amplitud de '%s' sintetizada" % letter)
+    plt.title("Espectro de amplitud")
     plt.plot(freqs, np.absolute(X))
     plt.plot(period_freqs, np.absolute(X_period), linestyle='dashed')
     plt.xlabel("Frecuencia [Hz]")
@@ -43,12 +44,10 @@ def spectral_analysis(sintetized, fs, f0, letter):
     plt.legend(["Espectro de '%s' sintetizada" % letter, "Espectro de un periodo de '%s'" % letter])
 
     plt.subplot(2, 1, 2)
-    plt.suptitle("Espectrograma '%s' sintetizada" % letter)
+    plt.title("Espectrograma")
     length_window = period_len * 10
 
-    # TODO checkear si no hay que pasar mode='magnitude' a specgram
     plt.specgram(sintetized, NFFT=length_window, Fs=fs, noverlap=length_window // 2)
-    plt.title("Espectrograma")
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Frecencia [Hz]")
     plt.subplots_adjust(hspace=0.5)
@@ -68,9 +67,9 @@ if __name__ == "__main__":
     glot, _ = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=250, periods=200, fs=fs)
 
     exercise(glot, fs, f0, A_PARAMS, 'A')
-    exercise(glot, fs, f0, E_PARAMS, 'E')
-    exercise(glot, fs, f0, I_PARAMS, 'I')
-    exercise(glot, fs, f0, O_PARAMS, 'O')
-    exercise(glot, fs, f0, U_PARAMS, 'U')
+    # exercise(glot, fs, f0, E_PARAMS, 'E')
+    # exercise(glot, fs, f0, I_PARAMS, 'I')
+    # exercise(glot, fs, f0, O_PARAMS, 'O')
+    # exercise(glot, fs, f0, U_PARAMS, 'U')
 
 
