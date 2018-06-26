@@ -80,8 +80,8 @@ def exercise(x, fs, letter, period_start, period_end, threshold):
     plt.legend(["'%s' con coeficientes originales" % letter, "'%s' con coeficientes truncados" % letter])
     plt.show()
 
-    output1 = "../data/%s1.wav" % letter
-    output2 = "../data/%s2.wav" % letter
+    output1 = "../data/ex3/%s1.wav" % letter
+    output2 = "../data/ex3/%s2.wav" % letter
     wav.write(output1, fs, x_periodic)
     wav.write(output2, fs, x2_periodic)
 

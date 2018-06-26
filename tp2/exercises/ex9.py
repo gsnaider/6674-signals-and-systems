@@ -40,6 +40,7 @@ def cepstrum_analysis(fs, sintetized, letter):
     plt.text(max_t + 0.0001, max_cep + 0.05, max_text, fontsize=10)
     plt.axvline(x=max_t, color='b', linestyle='dotted')
 
+    plt.subplots_adjust(hspace=0.5)
     plt.show()
 
     print("INFO DE '%s'" % letter)
@@ -107,20 +108,11 @@ if __name__ == "__main__":
     f0 = 200
     glot, t = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=1, periods=10, fs=fs)
 
-    glot = glot - np.mean(glot)
-    plt.figure()
-    plt.grid(linestyle='dashed')
-    plt.title("Pulso Glótico normalizado")
-    plt.xlabel("Tiempo [s]")
-    plt.ylabel("Amplitud")
-    plt.plot(t, glot)
-    plt.show()
-
     # exercise(glot, fs, A_PARAMS, 'A')
     exercise(glot, fs, E_PARAMS, 'E')
-    # exercise(glot, fs, I_PARAMS, 'I')
-    # exercise(glot, fs, O_PARAMS, 'O')
-    # exercise(glot, fs, U_PARAMS, 'U')
+    exercise(glot, fs, I_PARAMS, 'I')
+    exercise(glot, fs, O_PARAMS, 'O')
+    exercise(glot, fs, U_PARAMS, 'U')
 
 
 

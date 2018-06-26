@@ -84,7 +84,7 @@ def spectral_analysis(sintetized, filtered, fs, f0, letter):
     X = np.fft.rfft(sintetized) / len(sintetized)
     X_fil = np.fft.rfft(filtered) / len(filtered)
 
-    freqs = np.arange(0, fs / 2, (fs / 2) / len(X))
+    freqs = np.arange(0, fs, fs / len(X))
 
     plt.figure()
     plt.title("Espectro de amplitud de '%s' filtrada" % letter)

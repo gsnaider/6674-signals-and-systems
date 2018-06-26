@@ -16,7 +16,7 @@ if __name__ == "__main__":
     plt.show()
 
     amplitude_spectrum = abs(np.fft.fft(x) / len(x))
-    freqs = np.arange(0, fs/2, (fs/2) / len(amplitude_spectrum))
+    freqs = np.arange(0, fs, fs / len(amplitude_spectrum))
 
     plt.figure()
     plt.title("Espectro de amplitud de tren de pulsos")
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # Comparamos el espectro de un pulso con el del tren de pulsos
     pulse = x[:len(x) // 10]
     pulse_amp_spec = abs(np.fft.fft(pulse) / len(pulse))
-    pulse_freqs = np.arange(0, fs / 2, (fs / 2) / len(pulse_amp_spec))
+    pulse_freqs = np.arange(0, fs, fs / len(pulse_amp_spec))
 
     plt.figure()
     plt.plot(freqs, amplitude_spectrum)

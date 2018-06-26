@@ -37,7 +37,7 @@ def plot_new_x(x, fs, f0s, new_x, new_f0_pct):
 def exercise(x, fs, sonorous_segs, f0s, new_f0_pct, plot=False):
     new_x = PSOLA(x, fs, sonorous_segs, f0s, new_f0_pct, plot)
     plot_new_x(x, fs, f0s, new_x, new_f0_pct)
-    wav.write("../data/hh15_f0_%d.wav" % (new_f0_pct * 100), fs, new_x)
+    wav.write("../data/ex11/hh15_f0_%d.wav" % (new_f0_pct * 100), fs, new_x)
 
 if __name__ == "__main__":
     (fs, x) = wav.read("../data/hh15.WAV")

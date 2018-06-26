@@ -28,20 +28,19 @@ def spectral_analysis(sintetized, fs, f0, letter):
     period = sintetized[:period_len]
 
     X = np.fft.fft(sintetized) / len(sintetized)
-    freqs = np.arange(0, fs / 2, (fs / 2) / len(X))
+    freqs = np.arange(0, fs, fs / len(X))
 
     X_period = np.fft.fft(period) / len(period)
-    period_freqs = np.arange(0, fs / 2, (fs / 2) / len(X_period))
 
     plt.figure()
     plt.suptitle("Análisis en frecuencia de '%s' sintetizada" % letter)
     plt.subplot(2, 1, 1)
     plt.title("Espectro de amplitud")
     plt.plot(freqs, np.absolute(X))
-    plt.plot(period_freqs, np.absolute(X_period), linestyle='dashed')
+    # plt.plot(period_freqs, np.absolute(X_period), linestyle='dashed')
     plt.xlabel("Frecuencia [Hz]")
     plt.ylabel("|X(ω)|")
-    plt.legend(["Espectro de '%s' sintetizada" % letter, "Espectro de un periodo de '%s'" % letter])
+    # plt.legend(["Espectro de '%s' sintetizada" % letter, "Espectro de un periodo de '%s'" % letter])
 
     plt.subplot(2, 1, 2)
     plt.title("Espectrograma")
@@ -59,12 +58,12 @@ def exercise(glottal_pulse, fs, f0, vowel_params, letter):
     sintetized = sintetize(glottal_pulse, fs, vowel_params)
     plot_sintetized_vowel(sintetized, glottal_pulse, fs, f0, letter)
     spectral_analysis(sintetized, fs, f0, letter)
-    wav.write("../data/%s_sint.wav" % letter, fs, sintetized)
+    wav.write("../data/ex8/%s_sint2.wav" % letter, fs, sintetized)
 
 if __name__ == "__main__":
     fs = 16000
     f0 = 200
-    glot, _ = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=250, periods=200, fs=fs)
+    glot, _ = glottal_pulse(f0, Tp_pct=0.4, Tn_pct=0.16, P0=1, periods=200, fs=fs)
 
     exercise(glot, fs, f0, A_PARAMS, 'A')
     # exercise(glot, fs, f0, E_PARAMS, 'E')
